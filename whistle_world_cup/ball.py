@@ -1,0 +1,560 @@
+"""Whistle-driven LEGO robot that shouts "blocked" when it bumps into things and
+"scored" when you whistle Rock-a-bye Baby.
+
+Combines:
+  - tone_driving.py / tone_test.py: whistle F#6 to drive forward, sharper steers
+    right, flatter steers left, B6+ reverses; silence stops.
+  - color_sensor_test.py: the Color Sensor shines white and calibrates the empty-space
+    reflection at startup; a reflection well above that means an object is close,
+    and the light blinks red while it is.
+  - mqtt_chat.py: each new detection publishes "blocked" to the ME193 topic (and
+    anything else posted there is printed).
+  - sensor_song.py: each new detection plays the song on the Mac.
+  - whistle_baby.py: whistling the Rock-a-bye Baby tune publishes "scored", plays
+    Happy_Short.mp3 and makes the robot spin in place for 3 s. whistle_baby's
+    noise-robust pitch tracker and per-note matcher run on a background thread,
+    checking on every whistled frame, so the tune is caught as its last note
+    starts and whistle driving never waits.
+
+While an object is in front of the sensor, forward driving is blocked (reverse still
+works so you can back away). While the song plays, the mic is ignored so the song
+itself can't steer the robot.
+
+A live window shows the microphone waveform with the detected sine overlaid (as in
+tone_test.py), the current driving decision and wheel speeds, and a log of MQTT
+messages sent and received.
+
+Run: python3 together_v3.py  (Ctrl+C or close the plot window to quit)
+"""
+
+import queue
+import subprocess
+import threading
+import time
+from collections import deque
+from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pyaudio
+
+import legoeducation as le
+import whistle_baby as wb
+from mqttlib import MQTTClient
+from tone_test import (
+    CHUNK, FFT_SIZE, MAX_FREQ, MIN_FREQ, RATE, SCOPE_MS,
+    StabilityGate, calibrate_noise, detect_pitch, fit_sine, freq_to_note, trigger_index,
+)
+
+# ---- Configuration: devices ----
+MOTOR_CARD_COLOR = le.LEGO_COLOR_PURPLE
+MOTOR_CARD_SERIAL = "6235"
+SENSOR_CARD_COLOR = None  # None = first Color Sensor found
+SENSOR_CARD_SERIAL = None
+
+# ---- Configuration: MQTT ----
+TOPIC = "ME193/worldcup/chris"
+OBJECT_MESSAGE = "ball:failed"        # sent when the Color Sensor sees an object
+TUNE_MESSAGE = "ball:scored"           # sent when Rock-a-bye Baby is recognized
+MQTT_LOG_LINES = 6                # how many recent MQTT messages the window shows
+
+# ---- Configuration: song ----
+SONG = Path(__file__).with_name("HungerGames.mp3")         # played when blocked
+SCORE_SONG = Path(__file__).with_name("Happy_Short.mp3")  # played when scored
+STOP_ON_RELEASE = False           # True = cut the song off when the object moves away
+IGNORE_MIC_WHILE_PLAYING = True   # stop listening (and driving) while the song plays,
+                                  # so the speakers can't steer the robot
+
+# ---- Configuration: obstacle ----
+BLOCK_FORWARD_ON_OBJECT = True    # don't drive forward into a detected object
+
+# ---- Configuration: whistle driving (see tone_driving.py) ----
+OCTAVE_SHIFT = 1
+FORWARD_NOTE_MIDI = 78 + 12 * OCTAVE_SHIFT  # F#: drive straight
+REVERSE_NOTE_MIDI = 83 + 12 * OCTAVE_SHIFT  # B and above: drive backward
+STEER_RANGE_SEMITONES = 5
+DRIVE_SPEED = 80
+REVERSE_SPEED = 80
+TURN_SPEED = 5
+FORWARD_RANGE_CENTS = 150
+SMOOTHING = 0.4
+HOLD_TIME_S = 0.3
+
+# ---- Configuration: color sensor (see color_sensor_test.py) ----
+SHINE_COLOR = le.LEGO_COLOR_WHITE
+BLINK_COLOR = le.LEGO_COLOR_RED
+BLINK_PATTERN = le.LIGHT_PATTERN_SHORT_BLINK
+INTENSITY = 100
+CALIBRATION_S = 2.0
+TRIGGER_MARGIN = 10
+RELEASE_FRACTION = 0.5
+RELEASE_HOLD_S = 0.3
+SENSOR_CAL_DELAY_S = 0.05
+
+# ---- Configuration: tune recognition (see whistle_baby.py) ----
+SPIN_SPEED = 75                   # % speed, wheels in opposite directions
+SPIN_TIME_S = 3.0
+
+
+# ---- Whistle driving ----
+
+def note_name(midi):
+    """Note name (e.g. 'F#6') for a MIDI number."""
+    return freq_to_note(440.0 * 2 ** ((midi - 69) / 12))[0]
+
+
+def pitch_to_speeds(freq):
+    """Map a whistled frequency to (left, right) tank-drive speeds and a label."""
+    midi = 69 + 12 * np.log2(freq / 440.0)
+    offset = midi - FORWARD_NOTE_MIDI
+
+    if midi >= REVERSE_NOTE_MIDI - 0.5:
+        return -REVERSE_SPEED, -REVERSE_SPEED, "REVERSE"
+    if abs(offset) > STEER_RANGE_SEMITONES + 0.5:
+        return 0.0, 0.0, "out of range"
+
+    if abs(offset) * 100 <= FORWARD_RANGE_CENTS:
+        turn = 0.0
+    else:
+        turn = TURN_SPEED if offset > 0 else -TURN_SPEED
+
+    left = max(-100.0, min(100.0, DRIVE_SPEED + turn))
+    right = max(-100.0, min(100.0, DRIVE_SPEED - turn))
+    label = "FORWARD" if turn == 0 else ("RIGHT" if turn > 0 else "LEFT")
+    return left, right, label
+
+
+# ---- Color sensor ----
+
+def shine(sensor):
+    sensor.light_color(SHINE_COLOR, pattern=le.LIGHT_PATTERN_SOLID, intensity=INTENSITY)
+
+
+def calibrate_sensor(sensor):
+    """Average reflection (%) over CALIBRATION_S seconds."""
+    samples = []
+    end = time.time() + CALIBRATION_S
+    while time.time() < end:
+        samples.append(sensor.sensor.reflection)
+        time.sleep(SENSOR_CAL_DELAY_S)
+    return sum(samples) / len(samples)
+
+
+class ObjectDetector:
+    """Reflection threshold with hysteresis, as in color_sensor_test.py."""
+
+    def __init__(self, baseline):
+        self.on_level = min(baseline + TRIGGER_MARGIN, 100)
+        self.off_level = baseline + (self.on_level - baseline) * RELEASE_FRACTION
+        self.detected = False
+        self.low_since = None
+
+    def update(self, level, now):
+        """Return 'arrived', 'left', or None for this reading."""
+        if not self.detected and level > self.on_level:
+            self.detected = True
+            self.low_since = None
+            return "arrived"
+        if self.detected:
+            if level >= self.off_level:
+                self.low_since = None
+            elif self.low_since is None:
+                self.low_since = now
+            elif now - self.low_since > RELEASE_HOLD_S:
+                self.detected = False
+                return "left"
+        return None
+
+
+# ---- Song ----
+
+def play_song(path=SONG):
+    return subprocess.Popen(["afplay", str(path)])
+
+
+def is_playing(player):
+    return player is not None and player.poll() is None
+
+
+def stop_song(player):
+    if is_playing(player):
+        player.terminate()
+        player.wait()
+
+
+# ---- Tune recognition ----
+
+class TuneListener:
+    """Runs whistle_baby's pitch tracker and matcher on a background thread.
+
+    The main loop reads the mic in CHUNK-sized blocks; this thread slices them into
+    whistle_baby's overlapping frames (a WINDOW-long frame every HOP samples) and
+    matches on every whistled frame. The main loop only hands audio over with feed()
+    and checks poll() for results; neither blocks.
+    """
+
+    def __init__(self, template, quiet_audio):
+        if RATE != wb.RATE:
+            raise ValueError("Mic rate must match whistle_baby.RATE")
+        self.tracker = wb.PitchTracker()
+        self.tracker.calibrate([frame.copy() for frame in wb.frames_of(quiet_audio)])
+        self.matcher = wb.TuneMatcher(template)
+        # Rolling WINDOW of the latest audio, primed with the calibration recording.
+        self.buffer = quiet_audio[-wb.WINDOW:].astype(np.float32)
+        self.pending = np.zeros(0, dtype=np.float32)
+        self.audio = queue.Queue()
+        self.hits = queue.Queue()
+        self.running = True
+        self.thread = threading.Thread(target=self._run, daemon=True)
+        self.thread.start()
+
+    def feed(self, samples, muted=False):
+        """Queue mic audio. muted=True counts it as silence (e.g. while the song
+        plays) without letting it into the tracker's noise floor."""
+        self.audio.put((samples, muted))
+
+    def poll(self):
+        """Match cost if the tune was recognized since the last call, else None."""
+        try:
+            return self.hits.get_nowait()
+        except queue.Empty:
+            return None
+
+    def stop(self):
+        self.running = False
+        self.audio.put(None)
+        self.thread.join(timeout=1.0)
+
+    def _run(self):
+        while self.running:
+            item = self.audio.get()
+            if item is None:
+                break
+            samples, muted = item
+            self.pending = np.concatenate((self.pending, samples))
+            while len(self.pending) >= wb.HOP:
+                new, self.pending = self.pending[:wb.HOP], self.pending[wb.HOP:]
+                self.buffer = np.concatenate((self.buffer[wb.HOP:], new))
+                # Muted audio skips the tracker entirely: feeding it zeros would drag
+                # its adaptive noise floor to nothing.
+                pitch = None if muted else self.tracker.process(self.buffer)
+                cost = self.matcher.update(pitch, time.monotonic())
+                if cost is not None:
+                    self.hits.put(cost)
+
+
+def record_quiet(stream):
+    """whistle_baby's calibration time of room audio (plus one frame to prime the buffer)."""
+    n = int(np.ceil((wb.CALIBRATION_SECONDS * RATE + wb.WINDOW) / CHUNK))
+    return np.concatenate([
+        np.frombuffer(stream.read(CHUNK, exception_on_overflow=False), dtype=np.float32)
+        for _ in range(n)
+    ])
+
+
+# ---- MQTT ----
+
+# The MQTT callback runs on mqttlib's background thread, which must not touch the
+# plot, so messages are queued here and drawn by the main loop.
+mqtt_log = deque(maxlen=MQTT_LOG_LINES)
+
+
+def log_mqtt(direction, topic, payload):
+    mqtt_log.append(f"{time.strftime('%H:%M:%S')}  {direction}  [{topic}] {payload}")
+
+
+def on_message(topic, payload):
+    log_mqtt("recv <-", topic, payload)
+    print(f"\n[{topic}] {payload}")
+
+
+# ---- Live plot ----
+
+LABEL_COLORS = {
+    "FORWARD": "tab:green", "LEFT": "tab:blue", "RIGHT": "tab:blue",
+    "REVERSE": "tab:orange", "BLOCKED": "tab:red", "SONG": "tab:purple",
+    "SPIN": "tab:pink",
+}
+
+
+def speed_color(speed):
+    if speed > 0:
+        return "tab:green"
+    if speed < 0:
+        return "tab:orange"
+    return "0.7"
+
+
+class Dashboard:
+    """Scope (mic waveform + detected sine), wheel speeds, and the MQTT log."""
+
+    def __init__(self, mqtt_status):
+        self.scope_n = int(RATE * SCOPE_MS / 1000)
+        self.t = np.arange(CHUNK) / RATE
+
+        plt.ion()
+        self.fig = plt.figure(figsize=(10, 7))
+        grid = self.fig.add_gridspec(3, 1, height_ratios=[3, 1, 1.4])
+
+        # Oscilloscope, as in tone_test.py.
+        self.ax_scope = self.fig.add_subplot(grid[0])
+        t_ms = np.arange(self.scope_n) / RATE * 1000
+        self.raw_line, = self.ax_scope.plot(t_ms, np.zeros(self.scope_n), color="0.6",
+                                            lw=1, label="Microphone")
+        self.sine_line, = self.ax_scope.plot(t_ms, np.full(self.scope_n, np.nan),
+                                             color="tab:blue", lw=2, label="Detected sine")
+        self.ax_scope.set_xlim(0, t_ms[-1])
+        self.ax_scope.set_xlabel("Time (ms)")
+        self.ax_scope.set_ylabel("Amplitude")
+        self.ax_scope.legend(loc="upper right")
+        self.ax_scope.grid(alpha=0.3)
+        self.scope_title = self.ax_scope.set_title("Listening...")
+
+        # Driving decision: one bar per wheel.
+        self.ax_drive = self.fig.add_subplot(grid[1])
+        self.bars = self.ax_drive.barh(["Left", "Right"], [0, 0], color="0.7")
+        self.ax_drive.invert_yaxis()
+        self.ax_drive.set_xlim(-100, 100)
+        self.ax_drive.axvline(0, color="0.3", lw=1)
+        self.ax_drive.set_xlabel("Wheel speed (%)")
+        self.ax_drive.grid(axis="x", alpha=0.3)
+        self.drive_title = self.ax_drive.set_title("Drive: STOPPED", fontweight="bold")
+
+        # MQTT log.
+        self.ax_mqtt = self.fig.add_subplot(grid[2])
+        self.ax_mqtt.axis("off")
+        self.ax_mqtt.set_title(f"MQTT  {mqtt_status}", loc="left")
+        self.mqtt_text = self.ax_mqtt.text(0, 1, "", va="top", family="monospace",
+                                           transform=self.ax_mqtt.transAxes)
+
+        self.fig.tight_layout()
+        self.fig.show()
+
+    def is_open(self):
+        return plt.fignum_exists(self.fig.number)
+
+    def update(self, samples, freq, heard, label, left, right, level, detected):
+        start = trigger_index(samples, CHUNK - self.scope_n)
+        view = slice(start, start + self.scope_n)
+        self.raw_line.set_ydata(samples[view])
+        if freq is None:
+            self.sine_line.set_ydata(np.full(self.scope_n, np.nan))
+            self.scope_title.set_text(heard.strip())
+        else:
+            note, cents = freq_to_note(freq)
+            self.sine_line.set_ydata(fit_sine(samples, self.t, freq)[view])
+            self.scope_title.set_text(f"{note}  {freq:.1f} Hz  ({cents:+.0f} cents)")
+        # Auto-scale so quiet whistles are still visible.
+        peak = max(np.abs(samples[view]).max(), 0.02)
+        self.ax_scope.set_ylim(-1.2 * peak, 1.2 * peak)
+
+        for bar, speed in zip(self.bars, (left, right)):
+            bar.set_width(speed)
+            bar.set_color(speed_color(speed))
+        obj = "OBJECT" if detected else "clear"
+        self.drive_title.set_text(f"Drive: {label}   L {left:.0f}%  R {right:.0f}%   "
+                                  f"Reflection {level:.0f}% ({obj})")
+        self.drive_title.set_color(LABEL_COLORS.get(label, "0.2"))
+
+        self.mqtt_text.set_text("\n".join(mqtt_log) or "(no messages yet)")
+
+        self.fig.canvas.draw_idle()
+        self.fig.canvas.flush_events()
+
+
+def main():
+    for song in (SONG, SCORE_SONG):
+        if not song.exists():
+            print(f"Song not found: {song}")
+            return
+
+    # Built before connecting anything, since decoding the mp3 takes a moment.
+    print(f"Loading reference tune {wb.REFERENCE.name}...")
+    template = wb.build_template(wb.REFERENCE)
+
+    window = np.hanning(CHUNK)
+    freqs = np.fft.rfftfreq(FFT_SIZE, 1.0 / RATE)
+    band = (freqs >= MIN_FREQ) & (freqs <= MAX_FREQ)
+
+    doublemotor = le.DoubleMotor()
+    sensor = le.ColorSensor()
+    mqtt = MQTTClient()
+    mqtt_connected = False
+    pa = pyaudio.PyAudio()
+    stream = None
+    player = None
+    score_player = None
+    listener = None
+
+    # try/finally so the motor, light, song and connections are always cleaned up.
+    try:
+        print("Connecting to Double Motor...")
+        doublemotor.connect(card_color=MOTOR_CARD_COLOR, card_serial=MOTOR_CARD_SERIAL)
+        if not doublemotor.connected:
+            print("Error connecting to Double Motor.")
+            return
+
+        print("Connecting to Color Sensor...")
+        sensor.connect(card_color=SENSOR_CARD_COLOR, card_serial=SENSOR_CARD_SERIAL)
+        if not sensor.connected:
+            print("Error connecting to Color Sensor.")
+            return
+
+        print(f"Connecting to MQTT broker {mqtt.broker}...")
+        try:
+            mqtt.connect()
+            mqtt.subscribe(TOPIC, on_message)
+            mqtt_connected = True
+        except OSError as exc:
+            print(f"MQTT unavailable ({exc}); continuing without broadcasting.")
+        mqtt_status = (f"{mqtt.broker}  topic '{TOPIC}'" if mqtt_connected
+                       else "(unavailable, not broadcasting)")
+
+        shine(sensor)
+        print("Calibrating Color Sensor: keep objects away from the front of it...")
+        detector = ObjectDetector(calibrate_sensor(sensor))
+        print(f"Object detected above {detector.on_level:.0f}% reflection, "
+              f"released below {detector.off_level:.0f}%.")
+
+        stream = pa.open(format=pyaudio.paFloat32, channels=1, rate=RATE,
+                         input=True, frames_per_buffer=CHUNK)
+        print("Calibrating room noise: stay quiet...")
+        noise_profile = calibrate_noise(stream, window, band)
+        listener = TuneListener(template, record_quiet(stream))
+        gate = StabilityGate()
+
+        print(f"Whistle {note_name(FORWARD_NOTE_MIDI)} to go forward, higher = right, "
+              f"lower = left, {note_name(REVERSE_NOTE_MIDI)} = reverse.")
+        print(f"Whistle Rock-a-bye Baby to send '{TUNE_MESSAGE}' and spin for {SPIN_TIME_S:g} s.")
+        print("Ctrl+C or close the plot window to quit.\n")
+
+        dash = Dashboard(mqtt_status)
+
+        smoothed_left = smoothed_right = 0.0
+        target_left = target_right = 0.0
+        label = "STOPPED"
+        last_heard = 0.0
+        spin_until = 0.0
+
+        while dash.is_open():
+            # Always read the mic so its buffer never backs up, even when ignoring it.
+            data = stream.read(CHUNK, exception_on_overflow=False)
+            samples = np.frombuffer(data, dtype=np.float32)
+            now = time.time()
+
+            # ---- Tune recognition (runs on its own thread) ----
+            # While the song plays it counts as silence, so the speakers can't
+            # trigger it but its timeline keeps moving.
+            song_on = IGNORE_MIC_WHILE_PLAYING and (is_playing(player) or is_playing(score_player))
+            listener.feed(samples, muted=song_on)
+            cost = listener.poll()
+            if cost is not None:
+                print(f"\n*** Rock-a-bye Baby whistle recognized (cost {cost:.2f}): "
+                      f"'{TUNE_MESSAGE}', playing {SCORE_SONG.name}, spinning for {SPIN_TIME_S:g} s ***")
+                if mqtt_connected:
+                    mqtt.publish(TOPIC, TUNE_MESSAGE)
+                    log_mqtt("sent ->", TOPIC, TUNE_MESSAGE)
+                if not is_playing(score_player):
+                    score_player = play_song(SCORE_SONG)
+                spin_until = now + SPIN_TIME_S
+            spinning = now < spin_until
+
+            # ---- Object detection ----
+            level = sensor.sensor.reflection
+            event = detector.update(level, now)
+            if event == "arrived":
+                sensor.light_color(BLINK_COLOR, pattern=BLINK_PATTERN, intensity=INTENSITY)
+                if mqtt_connected:
+                    mqtt.publish(TOPIC, OBJECT_MESSAGE)
+                    log_mqtt("sent ->", TOPIC, OBJECT_MESSAGE)
+                if not is_playing(player):
+                    player = play_song()
+            elif event == "left":
+                shine(sensor)
+                if STOP_ON_RELEASE:
+                    stop_song(player)
+
+            # ---- Whistle -> drive command ----
+            freq = None
+            if song_on:
+                gate.update(None)
+                target_left = target_right = 0.0
+                label = "SONG"
+                heard = "   (song playing, mic ignored)"
+            else:
+                raw_freq, snr = detect_pitch(samples, window, freqs, band, noise_profile)
+                freq = gate.update(raw_freq)
+                if freq is not None:
+                    target_left, target_right, label = pitch_to_speeds(freq)
+                    note, cents = freq_to_note(freq)
+                    heard = f"{note:>4} {freq:7.1f} Hz {cents:+4.0f}c SNR {snr:3.0f}dB"
+                    last_heard = now
+                elif now - last_heard > HOLD_TIME_S:
+                    target_left = target_right = 0.0
+                    label = "STOPPED"
+                    heard = "   (no confident whistle)"
+                else:
+                    heard = "   (holding)"
+
+            if BLOCK_FORWARD_ON_OBJECT and detector.detected and target_left + target_right > 0:
+                target_left = target_right = 0.0
+                label = "BLOCKED"
+
+            # A recognized tune overrides whistle driving: spin in place, full effect
+            # right away (no smoothing ramp).
+            if spinning:
+                target_left, target_right = SPIN_SPEED, -SPIN_SPEED
+                smoothed_left, smoothed_right = target_left, target_right
+                label = "SPIN"
+            elif target_left == 0 and target_right == 0:
+                smoothed_left = smoothed_right = 0.0
+            else:
+                smoothed_left += (target_left - smoothed_left) * SMOOTHING
+                smoothed_right += (target_right - smoothed_right) * SMOOTHING
+
+            doublemotor.movement_move_tank(
+                speed_left=int(smoothed_left),
+                speed_right=int(smoothed_right),
+                blocking=False,
+            )
+
+            obj = "OBJECT" if detector.detected else "clear"
+            line = (f"{heard:<38} {label:<13} L: {smoothed_left:4.0f}%  R: {smoothed_right:4.0f}%"
+                    f"  Refl: {level:3.0f}% {obj}")
+            print(f"\r{line:<105}", end="", flush=True)
+
+            dash.update(samples, freq, heard, label, smoothed_left, smoothed_right,
+                        level, detector.detected)
+        print("\nPlot closed.")
+
+    except KeyboardInterrupt:
+        print("\nStopped.")
+    finally:
+        print("Cleaning up...")
+        plt.close("all")
+        if listener is not None:
+            listener.stop()
+        stop_song(player)
+        stop_song(score_player)
+        if doublemotor.connected:
+            try:
+                doublemotor.movement_stop()
+            except Exception as exc:
+                print(f"Error stopping motor: {exc}")
+            doublemotor.disconnect()
+        if sensor.connected:
+            try:
+                sensor.light_color(le.LEGO_COLOR_NOCOLOR, intensity=0)
+            except Exception as exc:
+                print(f"Error turning off light: {exc}")
+            sensor.disconnect()
+        if mqtt_connected:
+            mqtt.disconnect()
+        if stream is not None:
+            stream.stop_stream()
+            stream.close()
+        pa.terminate()
+
+
+if __name__ == "__main__":
+    main()
