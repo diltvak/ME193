@@ -1,0 +1,5 @@
+name: MQTT Motor Control
+description: "Drives two motors toward (0, 0) with proportional control from {x, y} positions received on the MQTT topic 'position'"
+icon: 🚗
+ports: []
+bricks: []
