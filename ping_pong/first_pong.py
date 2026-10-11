@@ -10,7 +10,12 @@ forearm and it glows with the LEGO Double Motor gyro rate. A return counts when 
 (camera + IMU, see SwingDetector in swing.py) lands while the ball is in the hit window AND
 your paddle is on the ball. Without the IMU (or with --no-imu) swings are detected by camera only.
 
-Setup screen keys:  1/2/3 difficulty   P points to win   A swap arm   W warm-up
+Each return also buzzes the Double Motor with a pattern for the kind of hit: a dull fading
+thump for a block (gentle swing), a sharp high-frequency pulse for a smash (fast swing), and
+an off-axis sputter for an edge hit (paddle off the ball or swing badly timed). The hit type
+is picked by classify_hit() from swing power, paddle offset and timing, and shown on screen.
+
+Setup screen keys:  1/2/3 difficulty   P points to win   A swap arm   H haptics   W warm-up
                     ENTER/SPACE start  Q quit
 In a game or warm-up: ESC returns to setup, Q quits.
 
@@ -20,7 +25,9 @@ Run: python3 first_pong.py [--arm right|left] [--difficulty easy|medium|hard] [-
 
 import argparse
 import math
+import queue
 import random
+import threading
 import time
 from collections import deque
 
@@ -70,7 +77,16 @@ PADDLE_CENTER = (0.5, 0.55)   # camera-frame point that maps to the middle of th
 PADDLE_GAIN = 1.6         # wrist travel in the camera -> paddle travel in the game view
 PADDLE_SMOOTHING = 0.5
 
-TABLE, TABLE_SIDE = (140, 85, 25), (90, 50, 15)
+# ---- Hit classification and haptics ----
+# Each return is classified from swing power, paddle offset and timing, then played on the motors.
+SMASH_DPS = 400.0         # swing power (gyro peak, deg/s) at or above which a hit is a smash
+EDGE_OFFSET = 0.7         # paddle-to-ball distance as a fraction of the reach beyond which it's an edge hit
+EDGE_TIMING = 0.8         # swing-vs-arrival error as a fraction of the hit window beyond which it's an edge hit
+POWER_WINDOW_S = 0.6      # how far back the swing power looks
+# Steps are (left duty, right duty, seconds); duty is -100..100 and flipping sign makes it buzz.
+HIT_STYLE = {"block": ("BLOCK", WHITE), "smash": ("SMASH!", RED), "edge": ("EDGE!", (0, 165, 255))}
+
+TABLE, TABLE_SIDE =(140, 85, 25), (90, 50, 15)
 WOOD, PADDLE_RED, PADDLE_DARK = (60, 110, 170), (40, 40, 210), (20, 20, 70)
 BALL_COLOR = (40, 150, 255)
 MENU_BG = (45, 30, 25)
@@ -92,6 +108,79 @@ def put(img, text, x, y, scale, color, thickness=1):
 def put_centered(img, text, y, scale, color, thickness=1):
     width = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, scale, thickness)[0][0]
     put(img, text, (img.shape[1] - width) // 2, y, scale, color, thickness)
+
+
+def haptic_pattern(kind):
+    """Motor steps (left duty, right duty, seconds) for a hit type."""
+    if kind == "smash":     # sharp, high-frequency pulse: fast full-power reversals on both sides
+        return [(100 * (-1) ** i, 100 * (-1) ** i, 0.025) for i in range(8)]
+    if kind == "edge":      # off-axis sputter: one side at a time, irregular, with dropouts
+        steps = []
+        for _ in range(6):
+            side = random.choice((0, 1))
+            duty = random.choice((-1, 1)) * random.randint(55, 90)
+            steps.append((duty if side == 0 else 0, duty if side == 1 else 0, random.uniform(0.015, 0.06)))
+            steps.append((0, 0, random.uniform(0.01, 0.05)))
+        return steps
+    # block: dull, low-frequency, fading thump on both sides
+    return [(amp * sign, amp * sign, 0.07) for amp in (45, 35, 25, 15) for sign in (1, -1)]
+
+
+class Haptics:
+    """Plays hit vibrations on the Double Motor from a background thread, so BLE latency
+    never stalls the video loop. A no-op when there is no motor."""
+
+    def __init__(self, motor):
+        self.motor = motor
+        self.enabled = motor is not None
+        self.busy = False
+        self.queue = queue.Queue()
+        if motor is not None:
+            threading.Thread(target=self._run, daemon=True).start()
+
+    def play(self, kind):
+        if self.enabled:
+            self.queue.put(kind)
+
+    def close(self):
+        self.queue.put(None)
+
+    def _drive(self, left, right):
+        import legoeducation as le
+        if left == right:
+            self.motor.motor_set_duty_cycle(left, motor=le.MOTOR_BOTH, blocking=False)
+        else:
+            self.motor.motor_set_duty_cycle(left, motor=le.MOTOR_LEFT, blocking=False)
+            self.motor.motor_set_duty_cycle(right, motor=le.MOTOR_RIGHT, blocking=False)
+
+    def _run(self):
+        import legoeducation as le
+        while (kind := self.queue.get()) is not None:
+            self.busy = True
+            try:
+                for left, right, seconds in haptic_pattern(kind):
+                    self._drive(left, right)
+                    time.sleep(seconds)
+                self.motor.motor_stop(motor=le.MOTOR_BOTH, blocking=False)
+            except Exception as err:   # a flaky link shouldn't take the game down
+                print(f"Haptics disabled: {err}")
+                self.enabled = False
+                return
+            finally:
+                time.sleep(0.1)        # let the vibration die down before the IMU is trusted again
+                self.busy = False
+
+
+def classify_hit(power, offset, timing_error):
+    """Label a return 'smash', 'edge' or 'block'.
+
+    power: swing strength in deg/s; offset: paddle-to-ball distance / reach;
+    timing_error: swing-vs-arrival error / hit window. Edge hits (poorly centred or badly timed)
+    take priority, then a fast swing is a smash, and anything gentler is a block.
+    """
+    if offset > EDGE_OFFSET or timing_error > EDGE_TIMING:
+        return "edge"
+    return "smash" if power >= SMASH_DPS else "block"
 
 
 class Paddle:
@@ -146,7 +235,8 @@ class Game:
         self.opp_x = 0.0
         self.last_swing = -math.inf
         self.msg, self.msg_color = "", WHITE
-        self.flash = None                   # (time, panel position) of the last return
+        self.flash = None                   # (time, panel position, hit type) of the last return
+        self.haptic = None                  # hit type waiting to be played on the motors
 
     def in_window(self, now):
         if self.phase != "incoming":
@@ -182,15 +272,19 @@ class Game:
                          x1=random.uniform(-spread, spread), h1=random.uniform(0.15, 0.42))
         self.phase = "incoming"
 
-    def _return(self, now, world, pos):
+    def _return(self, now, world, pos, power, offset):
         X, Y, z = world
+        b = self.ball
+        error = now - b["arrive"]
+        timing_error = abs(error) / (self.cfg["window"] * (AFTER_WINDOW_FRAC if error > 0 else 1.0))
+        self.haptic = kind = classify_hit(power, offset, timing_error)
         self.ball = dict(mode="out", t0=now, x0=X, y0=Y, z0=z, x1=random.uniform(-0.18, 0.18))
         self.phase = "returned"
         self.last_swing = -math.inf
         self.rally += 1
         self.best = max(self.best, self.rally)
         self.returns += 1
-        self.flash = (now, pos)
+        self.flash = (now, pos, kind)
 
     def _end_point(self, now, player_scored):
         if player_scored and not self.practice:
@@ -208,7 +302,8 @@ class Game:
             return None
         return "player" if self.player >= self.target else "opp" if self.opp >= self.target else None
 
-    def update(self, now, swung, paddle_xy):
+    def update(self, now, swung, paddle_xy, power):
+        """power is the recent swing strength in deg/s, used to classify a return."""
         if swung:
             self.last_swing = now
         # The opponent shuffles toward the ball while it is near their end.
@@ -220,8 +315,9 @@ class Game:
         if self.phase == "incoming":
             if world and paddle_xy and self.in_window(now) and now - self.last_swing <= SWING_MEMORY_S:
                 sx, sy, _ = proj(*world)
-                if math.hypot(paddle_xy[0] - sx, (paddle_xy[1] - sy) * 0.75) <= self.cfg["reach"]:
-                    self._return(now, world, (sx, sy))
+                offset = math.hypot(paddle_xy[0] - sx, (paddle_xy[1] - sy) * 0.75) / self.cfg["reach"]
+                if offset <= 1.0:
+                    self._return(now, world, (sx, sy), power, offset)
             if self.phase == "incoming" and now > self.ball["arrive"] + self.cfg["window"] * AFTER_WINDOW_FRAC:
                 self._end_point(now, player_scored=False)
         elif self.phase == "returned" and now - self.ball["t0"] >= RETURN_S:
@@ -346,8 +442,9 @@ def draw_top(top, court, game, paddle, detector, gyro_dps, now, flash):
     if game.flash and now - game.flash[0] < 0.4:
         age = now - game.flash[0]
         pos = (int(game.flash[1][0] * w), int(game.flash[1][1] * h))
-        cv2.circle(top, pos, int((20 + 200 * age) * s), YELLOW, 3, cv2.LINE_AA)
-        put_centered(top, "NICE!", max(20, pos[1] - int(40 * s)), 0.9 * s, YELLOW, 2)
+        label, color = HIT_STYLE[game.flash[2]]
+        cv2.circle(top, pos, int((20 + 200 * age) * s), color, 3, cv2.LINE_AA)
+        put_centered(top, label, max(20, pos[1] - int(40 * s)), 0.9 * s, color, 2)
     draw_paddle(top, paddle, gyro_dps, flash)
 
     if game.practice:
@@ -381,7 +478,7 @@ def draw_top(top, court, game, paddle, detector, gyro_dps, now, flash):
         put_centered(top, "step back so your arm is visible", h - int(14 * s), 0.55 * s, RED, 1)
 
 
-def draw_menu(top, difficulty, points, arm, pose_ok, imu_on, gyro_dps):
+def draw_menu(top, difficulty, points, arm, pose_ok, imu_on, gyro_dps, haptics_on):
     h, w = top.shape[:2]
     s = w / 560
     top[:] = MENU_BG
@@ -396,12 +493,14 @@ def draw_menu(top, difficulty, points, arm, pose_ok, imu_on, gyro_dps):
         put(top, f"[{i + 1}] {name.title():<7} {cfg['blurb']}", x, y, 0.55 * s, GREEN if selected else WHITE)
     put(top, f"[P] Play to {points} points", x, int(240 * s), 0.55 * s, WHITE)
     put(top, f"[A] Swinging arm: {arm}", x, int(266 * s), 0.55 * s, WHITE)
+    put(top, f"[H] Haptic feedback: {'on' if haptics_on else 'off'}" + ("" if imu_on else " (needs the motor)"),
+        x, int(292 * s), 0.55 * s, WHITE)
 
     put(top, "Pose tracking: " + ("arm found" if pose_ok else "not found - stand back"),
-        x, int(310 * s), 0.55 * s, GREEN if pose_ok else RED)
+        x, int(332 * s), 0.55 * s, GREEN if pose_ok else RED)
     imu_text = f"IMU: on (gyro {gyro_dps:4.0f} deg/s)" if imu_on else "IMU: off (camera only)"
-    put(top, imu_text, x, int(336 * s), 0.55 * s, GREEN if imu_on else YELLOW)
-    put_centered(top, "W warm-up    ENTER start    Q quit", h - int(20 * s), 0.6 * s, WHITE, 1)
+    put(top, imu_text, x, int(358 * s), 0.55 * s, GREEN if imu_on else YELLOW)
+    put_centered(top, "W warm-up    ENTER start    Q quit", h - int(14 * s), 0.6 * s, WHITE, 1)
 
 
 def draw_bottom_info(panel, detector, gyro_dps, flash):
@@ -445,6 +544,8 @@ def main():
     arm, difficulty, points = args.arm, args.difficulty, args.points
     detector = SwingDetector(arm)
     paddle = Paddle()
+    haptics = Haptics(motor)
+    power_log = deque(maxlen=60)     # (time, swing power) samples
     mode, game = "menu", None
     top = np.empty((ph, pw, 3), np.uint8)
     flash_until = 0.0
@@ -462,7 +563,12 @@ def main():
                     mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb), int((now - start) * 1000))
                 bottom = cv2.resize(cv2.flip(frame, 1), (pw, ph))
 
-                gyro_dps = gyro_magnitude(motor) if motor else None
+                # The motors' own vibration would read as a swing, so the gyro is ignored while they run.
+                gyro_dps = (0.0 if haptics.busy else gyro_magnitude(motor)) if motor else None
+                if not haptics.busy:
+                    # Swing power: gyro rate, or camera wrist speed scaled to the same units without an IMU.
+                    power_log.append((now, gyro_dps if gyro_dps is not None
+                                      else detector.speed * GYRO_THRESHOLD / SPEED_THRESHOLD))
                 landmarks = result.pose_landmarks[0] if result.pose_landmarks else None
                 swung = False
                 if landmarks:
@@ -475,9 +581,14 @@ def main():
                 paddle.update(landmarks, arm)
 
                 if mode == "menu":
-                    draw_menu(top, difficulty, points, arm, paddle.tracked, motor is not None, gyro_dps or 0.0)
+                    draw_menu(top, difficulty, points, arm, paddle.tracked, motor is not None, gyro_dps or 0.0,
+                              haptics.enabled)
                 else:
-                    game.update(now, swung, paddle.xy)
+                    power = max((p for t, p in power_log if now - t <= POWER_WINDOW_S), default=0.0)
+                    game.update(now, swung, paddle.xy, power)
+                    if game.haptic:
+                        haptics.play(game.haptic)
+                        game.haptic = None
                     draw_top(top, court, game, paddle, detector, gyro_dps, now, now < flash_until)
                 draw_bottom_info(bottom, detector, gyro_dps, now < flash_until)
 
@@ -499,6 +610,8 @@ def main():
                     elif key == ord("a"):
                         arm = "left" if arm == "right" else "right"
                         detector = SwingDetector(arm)
+                    elif key == ord("h") and motor:
+                        haptics.enabled = not haptics.enabled
                     elif key == ord("w"):
                         mode, game = "warmup", Game(PRACTICE, points, True, now)
                     elif key in (13, 10, 32):
@@ -508,6 +621,7 @@ def main():
     finally:
         cap.release()
         cv2.destroyAllWindows()
+        haptics.close()
         if motor and motor.connected:
             motor.disconnect()
 
