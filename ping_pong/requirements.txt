@@ -1,0 +1,5 @@
+legoeducation==1.1.1      # imu_test.py — LEGO Education hub BLE protocol
+mediapipe==1.1.0          # pose_detection.py — body landmark detection
+opencv-python==5.0.0.93   # pose_detection.py — webcam capture and drawing
+numpy==2.3.1              # pose_detection.py — array backend for mediapipe/opencv
+certifi==2025.7.14       # pose_detection.py — CA bundle for model download
