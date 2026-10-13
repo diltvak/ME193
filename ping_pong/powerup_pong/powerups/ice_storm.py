@@ -24,6 +24,8 @@ class IceStorm(Powerup):
     key = "g"
     color = (0, 220, 0)
     banner = f"ball slowed for the next {HITS} hits"
+    opponent_reaction = "frozen"
+    opponent_line = "Brrr... so cold!"
     fade_s = FADE_S
 
     def __init__(self):

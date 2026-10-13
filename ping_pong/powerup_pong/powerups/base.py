@@ -22,6 +22,8 @@ class Powerup:
     color = (255, 255, 255)   # BGR accent color
     banner = ""               # sub-line shown under the activation banner
     fade_s = 0.0              # how long the winding-down animation lasts after finish()
+    opponent_reaction = None  # persistent pose the CPU adopts while active: "frozen", "shocked", ...
+    opponent_line = ""        # what the CPU says when it fires
 
     def __init__(self):
         self.reset()
@@ -90,6 +92,7 @@ class PowerupManager:
     def _fire(self, powerup, game, now):
         if powerup.can_trigger(game, now):
             powerup.activate(game, now)
+            game.emit("powerup", powerup)
             self.banner = (powerup.name.upper() + "!", powerup.banner, powerup.color, now)
             return True
         return False
@@ -117,6 +120,11 @@ class PowerupManager:
 
     def takes_over_returns(self):
         return any(p.takes_over_returns() for p in self.powerups)
+
+    def opponent_reaction(self):
+        """The CPU pose requested by the first active powerup that has one, else None."""
+        return next((p.opponent_reaction for p in self.powerups
+                     if p.state in ("active", "fading") and p.opponent_reaction), None)
 
     def intercept(self, game, now, world):
         return any(p.intercept(game, now, world) for p in self.powerups)

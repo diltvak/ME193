@@ -29,6 +29,14 @@ class Game:
         self.msg, self.msg_color = "", WHITE
         self.flash = None                   # (time, panel position, hit type) of the last return
         self.haptic = None                  # hit type waiting to be played on the motors
+        self.events = []                    # (kind, arg) happenings for the opponent's reactions
+
+    def emit(self, kind, arg=None):
+        self.events.append((kind, arg))
+
+    def drain_events(self):
+        events, self.events = self.events, []
+        return events
 
     def in_window(self, now):
         if self.phase != "incoming":
@@ -72,6 +80,7 @@ class Game:
         self.ball = dict(mode="in", t0=now, flight=flight, arrive=now + flight, x0=self.opp_x,
                          x1=random.uniform(-spread, spread), h1=random.uniform(0.15, 0.42))
         self.phase = "incoming"
+        self.emit("launch")
 
     def _return(self, now, world, pos, kind):
         X, Y, z = world
@@ -83,6 +92,7 @@ class Game:
         self.best = max(self.best, self.rally)
         self.returns += 1
         self.flash = (now, pos, kind)
+        self.emit("player_return", kind)
         self.powerups.on_return(self, now)
 
     def _swing_return(self, now, world, pos, power, offset):
@@ -104,6 +114,7 @@ class Game:
                 self.opp += 1
         self.rally = 0
         self.msg, self.msg_color = ("POINT!", GREEN) if player_scored else ("MISS", RED)
+        self.emit("opp_missed" if player_scored else "opp_scored")
         self.phase, self.phase_t = "result", now
 
     def winner(self):
@@ -142,5 +153,6 @@ class Game:
         elif self.phase == "result" and now - self.phase_t >= RESULT_S:
             if self.winner():
                 self.phase, self.phase_t = "over", now
+                self.emit("over", self.winner())
             else:
                 self.phase, self.phase_t, self.ball, self.opp_x = "serve", now, None, 0.0

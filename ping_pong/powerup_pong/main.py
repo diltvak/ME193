@@ -8,6 +8,8 @@ showing a LEGO minifigure to the camera (detected by the YOLO model in weights.p
 
 Setup screen keys:  1/2/3 difficulty   P points to win   A swap arm   H haptics   M powerups
                     W warm-up   ENTER/SPACE start   Q quit
+Any time:           F fullscreen   V game-only view (camera becomes an inset)   + / - bigger / smaller
+                    (the window can also be resized by dragging its edge)
 In a game or warm-up: ESC returns to setup, Q quits. Y / G fire the yellow / green powerup from
 the keyboard, for testing without a minifig. In warm-up, powerups recharge after use.
 
@@ -25,19 +27,20 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) 
 
 import cv2
 import mediapipe as mp
-import numpy as np
 from mediapipe.tasks.python import BaseOptions, vision
 
 from pose_detection import MODEL_PATH, ensure_model
-from swing import GYRO_THRESHOLD, SPEED_THRESHOLD, WHITE, SwingDetector, connect_imu, draw_arm, gyro_magnitude
+from swing import GYRO_THRESHOLD, SPEED_THRESHOLD, SwingDetector, connect_imu, draw_arm, gyro_magnitude
 
 from powerup_pong.config import DIFFICULTIES, POINT_CHOICES, POWER_WINDOW_S, PRACTICE, WEIGHTS_PATH
 from powerup_pong.detection import MinifigDetector
 from powerup_pong.game import Game
 from powerup_pong.haptics import Haptics
+from powerup_pong.opponent import Opponent
 from powerup_pong.paddle import Paddle
 from powerup_pong.powerups import make_powerups
-from powerup_pong.render import draw_bottom_info, draw_menu, draw_minifigs, draw_top, make_court
+from powerup_pong.render import draw_bottom_info, draw_menu, draw_minifigs, draw_top
+from powerup_pong.view import View
 
 
 def main():
@@ -50,10 +53,6 @@ def main():
     parser.add_argument("--no-powerups", action="store_true", help="start with powerups off (toggle with M)")
     parser.add_argument("--weights", default=WEIGHTS_PATH, help="YOLO weights for minifigure detection")
     args = parser.parse_args()
-
-    pw = args.width
-    ph = pw * 3 // 4
-    court = make_court(pw, ph)
 
     ensure_model()
     motor = None if args.no_imu else connect_imu()
@@ -69,6 +68,7 @@ def main():
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise RuntimeError("Could not open camera (check macOS camera permission for your terminal/IDE).")
+    view = View("Ping pong (q to quit)", args.width)
 
     arm, difficulty, points = args.arm, args.difficulty, args.points
     powerups_on = not args.no_powerups
@@ -76,13 +76,14 @@ def main():
     paddle = Paddle()
     haptics = Haptics(motor)
     power_log = deque(maxlen=60)     # (time, swing power) samples
-    mode, game = "menu", None
-    top = np.empty((ph, pw, 3), np.uint8)
+    mode, game, opponent = "menu", None, Opponent()
     flash_until = 0.0
     start = time.monotonic()
 
     def new_game(practice, now):
         cfg = PRACTICE if practice else DIFFICULTIES[difficulty]
+        nonlocal opponent
+        opponent = Opponent()
         return Game(cfg, points, practice, now, make_powerups() if powerups_on else [])
 
     try:
@@ -96,7 +97,7 @@ def main():
                 rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 result = landmarker.detect_for_video(
                     mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb), int((now - start) * 1000))
-                bottom = cv2.resize(cv2.flip(frame, 1), (pw, ph))
+                bottom = cv2.resize(cv2.flip(frame, 1), (view.pw, view.ph))
                 if powerups_on:
                     minifig.submit(frame)
 
@@ -118,7 +119,7 @@ def main():
                 paddle.update(landmarks, arm)
 
                 if mode == "menu":
-                    draw_menu(top, difficulty, points, arm, paddle.tracked, motor is not None, gyro_dps or 0.0,
+                    draw_menu(view.top, difficulty, points, arm, paddle.tracked, motor is not None, gyro_dps or 0.0,
                               haptics.enabled, powerups_on, minifig.status)
                     minifig.poll()   # discard sightings made while in the menu
                 else:
@@ -129,18 +130,18 @@ def main():
                     if game.haptic:
                         haptics.play(game.haptic)
                         game.haptic = None
-                    draw_top(top, court, game, paddle, detector, gyro_dps, now, now < flash_until)
+                    draw_top(view.top, view.court, game, paddle, detector, opponent, gyro_dps, now, now < flash_until)
                 draw_bottom_info(bottom, detector, gyro_dps, now < flash_until)
                 if powerups_on:
                     draw_minifigs(bottom, minifig)
 
-                canvas = np.vstack([top, bottom])
-                cv2.line(canvas, (0, ph), (pw, ph), WHITE, 2)
-                cv2.imshow("Ping pong (q to quit)", canvas)
+                view.show(view.compose(bottom))
 
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord("q") or (key == 27 and mode == "menu"):
                     break
+                if view.handle_key(key):
+                    continue
                 if key == 27:
                     mode = "menu"
                 elif mode == "menu":

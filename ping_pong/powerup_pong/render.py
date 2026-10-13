@@ -46,19 +46,6 @@ def make_court(pw, ph):
     return img
 
 
-def draw_opponent(img, x):
-    h, w = img.shape[:2]
-    z = 5.6
-
-    def p(X, Y):
-        return to_px(X, Y, z, w, h)
-
-    k = 1 / z
-    cv2.rectangle(img, p(x - 0.3, 0.8), p(x + 0.3, 0.1), (60, 60, 170), -1)
-    cv2.circle(img, p(x, 0.97), max(3, int(0.12 * h * k)), (150, 190, 230), -1, cv2.LINE_AA)
-    cv2.circle(img, p(x + 0.45, 0.6), max(3, int(0.09 * w * k)), PADDLE_RED, -1, cv2.LINE_AA)
-
-
 def draw_ball(img, game, now):
     world = game.ball_world(now)
     if world is None:
@@ -114,7 +101,7 @@ def draw_powerup_hud(top, manager, now):
     """One row per powerup, top left: a colored token plus its status (ready / active / used)."""
     s = top.shape[1] / 560
     for i, p in enumerate(manager):
-        c = (int(20 * s), int((70 + 28 * i) * s))
+        c = (int(20 * s), int((66 + 28 * i) * s))
         r = int(9 * s)
         used = p.state == "used"
         if p.state in ("active", "fading"):
@@ -136,16 +123,20 @@ def draw_banner(top, manager, now):
     if banner:
         title, sub, color, t = banner
         s = top.shape[1] / 560
-        put_centered(top, title, int(top.shape[0] * 0.3), 1.3 * s, color, 4)
+        put_centered(top, title, int(top.shape[0] * 0.56), 1.3 * s, color, 4)
         if sub:
-            put_centered(top, sub, int(top.shape[0] * 0.3) + int(30 * s), 0.6 * s, WHITE, 2)
+            put_centered(top, sub, int(top.shape[0] * 0.56) + int(30 * s), 0.6 * s, WHITE, 2)
 
 
-def draw_top(top, court, game, paddle, detector, gyro_dps, now, flash):
+def draw_top(top, court, game, paddle, detector, opponent, gyro_dps, now, flash):
     h, w = top.shape[:2]
     s = w / 560
     top[:] = court
-    draw_opponent(top, game.opp_x)
+    # The CPU watches the ball while it is in play, and your paddle otherwise.
+    world = game.ball_world(now)
+    look = to_px(*world, w, h) if world else (int(paddle.pos[0] * w), int(paddle.pos[1] * h)) if paddle.pos else (w // 2, h)
+    opponent.update(game, now)
+    opponent.draw(top, game, now, look)
     game.powerups.draw_scene(top, game, now)
     draw_ball(top, game, now)
     if game.flash and now - game.flash[0] < 0.4:
@@ -159,8 +150,8 @@ def draw_top(top, court, game, paddle, detector, gyro_dps, now, flash):
 
     if game.practice:
         put_centered(top, "WARM-UP", int(32 * s), 0.9 * s, YELLOW, 2)
-        put_centered(top, f"returns {game.returns}   misses {game.misses}   streak {game.rally}",
-                     int(56 * s), 0.55 * s, WHITE, 1)
+        for i, line in enumerate((f"returns {game.returns}", f"misses {game.misses}", f"streak {game.rally}")):
+            put(top, line, int(10 * s), int((20 + 16 * i) * s), 0.45 * s, WHITE)
         put(top, "ENTER / ESC: back to setup", int(10 * s), h - int(10 * s), 0.5 * s, WHITE)
         mw, mx = int(110 * s), int(10 * s)
         draw_meter(top, "wrist speed", detector.speed, SPEED_THRESHOLD, 3.0, mx, h - int(110 * s), mw, s)
@@ -169,7 +160,7 @@ def draw_top(top, court, game, paddle, detector, gyro_dps, now, flash):
             draw_meter(top, "IMU gyro", gyro_dps, GYRO_THRESHOLD, 450.0, mx, h - int(50 * s), mw, s)
     else:
         put_centered(top, f"YOU {game.player}  :  {game.opp} CPU", int(34 * s), 0.9 * s, WHITE, 2)
-        put_centered(top, f"first to {game.target}", int(56 * s), 0.5 * s, WHITE, 1)
+        put(top, f"first to {game.target}", int(10 * s), int(22 * s), 0.5 * s, WHITE)
         if game.rally > 1:
             put(top, f"rally {game.rally}", w - int(100 * s), int(30 * s), 0.6 * s, YELLOW)
     draw_powerup_hud(top, game.powerups, now)
@@ -216,6 +207,7 @@ def draw_menu(top, difficulty, points, arm, pose_ok, imu_on, gyro_dps, haptics_o
         x, int(350 * s), 0.55 * s, GREEN if pose_ok else RED)
     imu_text = f"IMU: on (gyro {gyro_dps:4.0f} deg/s)" if imu_on else "IMU: off (camera only)"
     put(top, imu_text, x, int(374 * s), 0.55 * s, GREEN if imu_on else YELLOW)
+    put_centered(top, "F fullscreen    V game-only view    + / - size", h - int(32 * s), 0.45 * s, (200, 200, 200), 1)
     put_centered(top, "W warm-up    ENTER start    Q quit", h - int(12 * s), 0.6 * s, WHITE, 1)
 
 
