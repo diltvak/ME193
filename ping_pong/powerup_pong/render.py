@@ -190,7 +190,8 @@ def draw_top(top, court, game, paddle, detector, gyro_dps, now, flash):
         put_centered(top, "step back so your arm is visible", h - int(14 * s), 0.55 * s, RED, 1)
 
 
-def draw_menu(top, difficulty, points, arm, pose_ok, imu_on, gyro_dps, haptics_on, powerups_on, minifig_status):
+def draw_menu(top, difficulty, points, arm, pose_ok, imu_on, gyro_dps, haptics_on, powerups_on, minifig_status,
+              tag_note="", scoreboard=None):
     h, w = top.shape[:2]
     s = w / 560
     top[:] = MENU_BG
@@ -216,6 +217,11 @@ def draw_menu(top, difficulty, points, arm, pose_ok, imu_on, gyro_dps, haptics_o
         x, int(350 * s), 0.55 * s, GREEN if pose_ok else RED)
     imu_text = f"IMU: on (gyro {gyro_dps:4.0f} deg/s)" if imu_on else "IMU: off (camera only)"
     put(top, imu_text, x, int(374 * s), 0.55 * s, GREEN if imu_on else YELLOW)
+    put(top, tag_note or "AprilTags: 10 easy / 11 medium / 12 hard, 13 = start", x, int(398 * s), 0.55 * s,
+        GREEN if tag_note else YELLOW)
+    if scoreboard is not None:
+        put(top, f"MQTT: {scoreboard.topic}" if scoreboard.online else "MQTT: offline",
+            x, int(422 * s), 0.5 * s, GREEN if scoreboard.online else RED)
     put_centered(top, "W warm-up    ENTER start    Q quit", h - int(12 * s), 0.6 * s, WHITE, 1)
 
 
@@ -242,3 +248,12 @@ def draw_minifigs(panel, minifig):
     if minifig.status not in ("ready", "off"):
         text = "minifig model loading..." if minifig.status == "loading" else "minifig model unavailable"
         put(panel, text, int(10 * s), int(46 * s), 0.5 * s, YELLOW if minifig.status == "loading" else RED)
+
+
+def draw_tags(panel, tags):
+    """Outline AprilTags on the (mirrored) webcam panel, using the frame size they were found in."""
+    h, w = panel.shape[:2]
+    for tag, pts in tags.visible.items():
+        mirrored = np.array([[w - 1 - x * w / tags.frame_w, y * h / tags.frame_h] for x, y in pts], np.int32)
+        cv2.polylines(panel, [mirrored], True, YELLOW, 2)
+        put(panel, f"tag {tag}", int(mirrored[:, 0].min()), max(14, int(mirrored[:, 1].min()) - 6), 0.5 * w / 560, YELLOW)

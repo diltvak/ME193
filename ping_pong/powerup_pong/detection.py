@@ -12,7 +12,8 @@ import threading
 import time
 from collections import defaultdict
 
-from powerup_pong.config import (MINIFIG_CONF, MINIFIG_CONFIRM_FRAMES, MINIFIG_IMGSZ, MINIFIG_REARM_S,
+from powerup_pong.config import (MINIFIG_CONF, MINIFIG_CONFIRM_FRAMES, MINIFIG_IMGSZ, MINIFIG_MAX_FPS,
+                                 MINIFIG_THREADS, MINIFIG_REARM_S,
                                  NO_FIG_CLASS, WEIGHTS_PATH)
 
 
@@ -54,7 +55,9 @@ class MinifigDetector:
 
     def _run(self):
         try:
+            import torch
             from ultralytics import YOLO
+            torch.set_num_threads(MINIFIG_THREADS)
             model = YOLO(self._weights)
         except Exception as err:   # no weights or no ultralytics: play on without powerups
             self.status = f"error: {err}"
@@ -70,6 +73,7 @@ class MinifigDetector:
                 frame, self._frame = self._frame, None
             if frame is None:
                 continue
+            started = time.monotonic()
             try:
                 result = model(frame, conf=MINIFIG_CONF, imgsz=MINIFIG_IMGSZ, verbose=False)[0]
                 dets = [(result.names[int(b.cls)], float(b.conf), tuple(float(v) for v in b.xyxyn[0]))
@@ -79,6 +83,7 @@ class MinifigDetector:
                 print(f"Minifig detection disabled: {err}")
                 return
             self._update(dets, time.monotonic())
+            time.sleep(max(0.0, 1 / MINIFIG_MAX_FPS - (time.monotonic() - started)))   # leave CPU to the game
 
     def _update(self, dets, now):
         seen = {name for name, _, _ in dets}

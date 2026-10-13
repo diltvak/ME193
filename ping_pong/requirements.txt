@@ -6,3 +6,4 @@ certifi==2025.7.14       # pose_detection.py — CA bundle for model download
 deepface==0.0.102        # expressions.py — facial emotion recognition
 tf-keras==2.21.0          # expressions.py — Keras 2 backend required by deepface
 ultralytics               # minifig.py — YOLO11 inference (pulls in torch, torchvision)
+paho-mqtt>=2.0            # powerup_pong/mqttlib.py — MQTT score broadcast

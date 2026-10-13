@@ -64,6 +64,8 @@ MENU_BG = (45, 30, 25)
 WEIGHTS_PATH = os.path.join(PARENT_DIR, "weights.pt")
 YELLOW_CLASS, GREEN_CLASS, NO_FIG_CLASS = "Yellow MiniFig", "Green MiniFig", "No MiniFig"
 MINIFIG_COLORS = {YELLOW_CLASS: YELLOW, GREEN_CLASS: GREEN}   # box colors on the webcam panel
+MINIFIG_MAX_FPS = 6       # cap on YOLO inferences per second, so it doesn't starve the game loop
+MINIFIG_THREADS = 2       # CPU threads torch may use for YOLO (leaves cores for pose + drawing)
 MINIFIG_CONF = 0.4        # minimum YOLO confidence for a detection to count
 MINIFIG_IMGSZ = 640       # image size the model was trained at
 MINIFIG_CONFIRM_FRAMES = 3   # consecutive detections before a minifig "appears"
@@ -72,3 +74,19 @@ MINIFIG_REARM_S = 1.5     # a class can't trigger again this soon after it last 
 # ---- Powerup HUD ----
 BANNER_S = 1.6            # how long the "powerup activated" banner stays up
 PRACTICE_RESET_S = 2.0    # in warm-up, a used powerup becomes ready again this long after it ends
+
+# ---- AprilTags (tag36h11) on the setup screen ----
+DIFFICULTY_TAGS = {10: "easy", 11: "medium", 12: "hard"}   # tag ID -> difficulty
+START_TAG = 13                                             # green flag: starts the game
+TAG_DETECT_WIDTH = 640    # frames are shrunk to this width before tag detection (speed)
+TAG_EVERY_N = 2           # run tag detection on every Nth camera frame
+TAG_CONFIRM_FRAMES = 2    # consecutive frames a tag must be seen before it counts
+
+# ---- MQTT scoreboard ----
+MQTT_BROKER = "test.mosquitto.org"
+PLAYER_NAME = "David"  # CHANGE ME (or pass --name); the score goes to ME193/Rogers/<name>
+MQTT_TOPIC_FMT = "ME193/Rogers/{name}"
+
+# ---- Camera / pose speed ----
+CAM_WIDTH, CAM_HEIGHT = 640, 480   # requested capture size; big frames only slow pose + YOLO down
+POSE_WIDTH = 480                   # frames are shrunk to this width before pose detection
