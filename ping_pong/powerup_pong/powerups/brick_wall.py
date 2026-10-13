@@ -25,6 +25,8 @@ class BrickWall(Powerup):
     key = "y"
     color = (0, 215, 255)
     banner = "automatic return"
+    opponent_reaction = "shocked"
+    opponent_line = "No fair! A wall?!"
     fade_s = CRUMBLE_S
 
     def __init__(self):
