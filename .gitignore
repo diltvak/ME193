@@ -1,3 +1,5 @@
 *.mov
 *.MOV
 .DS_Store
+venv/
+.venv/
