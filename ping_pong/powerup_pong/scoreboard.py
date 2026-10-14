@@ -44,6 +44,7 @@ class Scoreboard:
         if client:
             try:
                 client.publish(self.topic, str(self.record), retain=True)
+                print(f"MQTT publish: {self.topic} = {self.record}")
             except Exception as err:
                 print(f"Scoreboard publish failed: {err}")
 
