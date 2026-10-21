@@ -1,0 +1,10 @@
+id: lego_ble
+name: LEGO Education BLE Gateway
+description: "Connects to LEGO Education devices (Controller, Color Sensor, Double Motor IMU, Single Motor) over Bluetooth LE and serves their data to the App's Python code over TCP."
+variables:
+  - name: LEGO_CARD_COLOR
+    description: "Connection Card color shared by all LEGO devices (red, yellow, blue, green, purple, magenta, azure, orange)"
+    default_value: "purple"
+  - name: LEGO_CARD_SERIAL
+    description: "Connection Card serial number shared by all LEGO devices"
+    default_value: "6235"

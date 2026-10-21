@@ -1,0 +1,23 @@
+# The main App container cannot reach BlueZ, so the LEGO BLE link runs in its own
+# service with the host's system D-Bus socket mounted. The main App reaches it at
+# lego-ble:5555 on the App's internal network.
+services:
+  lego-ble:
+    image: ghcr.io/arduino/app-bricks/python-apps-base:0.12.0
+    user: "1000:1000"
+    entrypoint: ["sh", "/app/bricks/lego_ble/start_gateway.sh"]
+    restart: on-failure
+    volumes:
+      - "${APP_HOME:-.}:/app"
+      - "/run/dbus/system_bus_socket:/run/dbus/system_bus_socket"
+    environment:
+      HOME: /tmp
+      PYTHONUNBUFFERED: "1"
+      LEGO_CARD_COLOR: "${LEGO_CARD_COLOR:-purple}"
+      LEGO_DEVICES: "${LEGO_DEVICES:-controller,colorsensor,doublemotor,singlemotor}"
+      LEGO_CARD_SERIAL: "${LEGO_CARD_SERIAL:-6235}"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"

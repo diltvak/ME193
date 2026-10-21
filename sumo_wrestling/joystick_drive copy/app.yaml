@@ -1,0 +1,6 @@
+name: Joystick Drive
+icon: 🕹️
+description: "Sumo robot: joystick drive, stops and publishes Defeat over MQTT when it leaves the blue-tape ring"
+ports: []
+bricks:
+  - lego_ble:
