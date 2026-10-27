@@ -1,0 +1,22 @@
+{
+  "axis": 0,
+  "peak_pct": 95.0,
+  "t_stand_bike": 0.2,
+  "t_bike_walk": 0.775,
+  "t_walk_run": 2.119,
+  "fs": 100.0,
+  "window_s": 2.5,
+  "overlap": 0.5,
+  "max_gap_s": 0.3,
+  "buffer_s": 10.0,
+  "live_hop_s": 0.5,
+  "vote_windows": 3,
+  "quick_stand_s": 1.0,
+  "stale_s": 2.0,
+  "pico_ip": "10.247.137.46",
+  "pico_port": 5005,
+  "local_port": 5005,
+  "hello_period_s": 1.0,
+  "accel_lsb_per_g": 8192.0,
+  "gyro_lsb_per_dps": 65.5
+}
