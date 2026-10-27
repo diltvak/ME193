@@ -1,0 +1,3 @@
+numpy
+matplotlib   # only for `live --plot`
+PyQt6        # only for `live --plot`
