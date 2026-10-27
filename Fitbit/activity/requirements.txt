@@ -1,0 +1,5 @@
+numpy
+scipy
+scikit-learn
+joblib
+matplotlib   # only for `live --plot`
