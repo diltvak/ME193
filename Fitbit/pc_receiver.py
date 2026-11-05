@@ -40,10 +40,34 @@ class Receiver(threading.Thread):
         self.t0_us = None
         self.stop = False
         self.target = None          # Pico (ip, port) once the user clicks Connect
-        name = datetime.datetime.now().strftime("mpu_%Y%m%d_%H%M%S.csv")
-        self.filename = name
-        self.csv = open(name, "w", buffering=1)
-        self.csv.write("t_s,pc_time,ax_g,ay_g,az_g,gx_dps,gy_dps,gz_dps,temp_c\n")
+        self.state = "stopped"      # stopped | recording | paused
+        self.filename = None
+        self.csv = None
+        self.rec_t0 = None          # stream time of the first logged sample
+
+    def play(self):
+        """Start a new timestamp-named log, or resume a paused one."""
+        with self.lock:
+            if self.state == "recording":
+                return
+            if self.state == "stopped":
+                self.filename = datetime.datetime.now().strftime("mpu_%Y%m%d_%H%M%S.csv")
+                self.csv = open(self.filename, "w", buffering=1)
+                self.csv.write("t_s,pc_time,ax_g,ay_g,az_g,gx_dps,gy_dps,gz_dps,temp_c\n")
+                self.rec_t0 = None
+            self.state = "recording"
+
+    def pause(self):
+        with self.lock:
+            if self.state == "recording":
+                self.state = "paused"
+
+    def stop_recording(self):
+        with self.lock:
+            self.state = "stopped"
+            if self.csv:
+                self.csv.close()
+                self.csv = None
 
     def run(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -67,7 +91,7 @@ class Receiver(threading.Thread):
                 self.handle(pkt)
             except Exception as e:  # malformed packet
                 print("bad packet:", e)
-        self.csv.close()
+        self.stop_recording()
 
     def handle(self, pkt):
         seq, n = HEADER.unpack_from(pkt)
@@ -102,11 +126,14 @@ class Receiver(threading.Thread):
             v[:, 3] / 340.0 + 36.53,
         ])
 
-        self.csv.write("".join(
-            f"{t[i]:.4f},{rx_time:.3f}," + ",".join(f"{d[c, i]:.5f}" for c in range(7)) + "\n"
-            for i in range(n)))
-
         with self.lock:
+            if self.state == "recording":
+                if self.rec_t0 is None:
+                    self.rec_t0 = t[0]
+                self.csv.write("".join(
+                    f"{t[i] - self.rec_t0:.4f},{rx_time:.3f},"
+                    + ",".join(f"{d[c, i]:.5f}" for c in range(7)) + "\n"
+                    for i in range(n)))
             self.t = np.concatenate([self.t, t])[-MAX_SAMPLES:]
             self.data = np.concatenate([self.data, d], axis=1)[:, -MAX_SAMPLES:]
             self.packets += 1
@@ -139,6 +166,19 @@ class Window(QtWidgets.QWidget):
         self.conn_label = QtWidgets.QLabel("Not connected")
         conn.addWidget(self.conn_label)
         layout.addLayout(conn)
+
+        ctrl = QtWidgets.QHBoxLayout()
+        self.play_btn = QtWidgets.QPushButton("▶ Play")
+        self.pause_btn = QtWidgets.QPushButton("⏸ Pause")
+        self.stop_btn = QtWidgets.QPushButton("⏹ Stop")
+        self.play_btn.clicked.connect(self.rx.play)
+        self.pause_btn.clicked.connect(self.rx.pause)
+        self.stop_btn.clicked.connect(self.rx.stop_recording)
+        for b in (self.play_btn, self.pause_btn, self.stop_btn):
+            ctrl.addWidget(b)
+        self.rec_label = QtWidgets.QLabel()
+        ctrl.addWidget(self.rec_label, 1)
+        layout.addLayout(ctrl)
 
         top = QtWidgets.QHBoxLayout()
         top.addWidget(QtWidgets.QLabel("Window:"))
@@ -201,8 +241,16 @@ class Window(QtWidgets.QWidget):
         if self.rx.target and self.rate > 0:
             self.conn_label.setText(f"Connected to {self.rx.target[0]}")
         self.status.setText(
-            f"{self.rate:.0f} samples/s | packets {self.rx.packets} | lost {self.rx.lost} | "
-            f"saving to {self.rx.filename}")
+            f"{self.rate:.0f} samples/s | packets {self.rx.packets} | lost {self.rx.lost}")
+        state = self.rx.state
+        self.play_btn.setEnabled(state != "recording")
+        self.pause_btn.setEnabled(state == "recording")
+        self.stop_btn.setEnabled(state != "stopped")
+        self.rec_label.setText({
+            "recording": f"● Recording to {self.rx.filename}",
+            "paused": f"⏸ Paused ({self.rx.filename})",
+            "stopped": "Not recording" + (f" (last: {self.rx.filename})" if self.rx.filename else ""),
+        }[state])
 
 
 def main():
