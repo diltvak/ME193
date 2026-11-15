@@ -1,0 +1,2 @@
+# Your real keys live in .env. Never commit it.
+.env

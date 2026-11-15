@@ -1,0 +1,5 @@
+name: Finger Lockbox
+description: "Press the button, show the secret sequence of finger counts to the camera, and a servo opens the box"
+icon: 🔒
+ports: []
+bricks: []

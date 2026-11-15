@@ -1,0 +1,5 @@
+{
+  "url": "PASTE THE URL OF YOUR ONSHAPE DOCUMENT HERE",
+  "assembly_name": "robot",
+  "output_format": "mujoco"
+}

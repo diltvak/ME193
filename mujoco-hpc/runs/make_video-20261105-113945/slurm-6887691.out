@@ -1,0 +1,165 @@
+Warp 1.14.0 initialized:
+   CUDA Toolkit 12.9, Driver 12.9
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA A100-PCIE-40GB" (39 GiB, sm_80, mempool enabled)
+   Kernel cache:
+     /cluster/home/dlitva01/.cache/warp/1.14.0
+Module mujoco_warp._src.smooth e597d07 load on device 'cuda:0' took 7282.69 ms  (compiled)
+Module _nxn_broadphase__locals__kernel_df6640ed df6640e load on device 'cuda:0' took 569.43 ms  (compiled)
+Module _primitive_narrowphase__locals__primitive_narrowphase_02c4abe2 02c4abe load on device 'cuda:0' took 1029.73 ms  (compiled)
+Module mujoco_warp._src.constraint 880bd7f load on device 'cuda:0' took 171.72 ms  (compiled)
+Module _friction_dof__locals__kernel_3c14efda 3c14efd load on device 'cuda:0' took 303.66 ms  (compiled)
+Module _limit_slide_hinge__locals__kernel_4d6c55ab 4d6c55a load on device 'cuda:0' took 336.03 ms  (compiled)
+Module _efc_contact_init__locals__kernel_07a590e0 07a590e load on device 'cuda:0' took 218.45 ms  (compiled)
+Module _efc_contact_jac_dense__locals__kernel_5e1af9f9 1d73624 load on device 'cuda:0' took 883.61 ms  (compiled)
+Module _efc_contact_update__locals__kernel_8aad7bfd 8aad7bf load on device 'cuda:0' took 307.06 ms  (compiled)
+Module mujoco_warp._src.forward 687ddb7 load on device 'cuda:0' took 1666.51 ms  (compiled)
+Module mujoco_warp._src.passive 8ff6993 load on device 'cuda:0' took 2979.65 ms  (compiled)
+Module mujoco_warp._src.forward 2190340 load on device 'cuda:0' took 1664.72 ms  (compiled)
+Module _qfrc_smooth__locals__kernel_6eb3d958 6eb3d95 load on device 'cuda:0' took 172.74 ms  (compiled)
+Module mujoco_warp._src.support d1e71d9 load on device 'cuda:0' took 357.43 ms  (compiled)
+Module _small_cholesky_factorize_solve_block__locals__kernel_b689c361 33f06c1 load on device 'cuda:0' took 648.27 ms  (compiled)
+Module _small_cholesky_factorize_solve_block__locals__kernel_7d0ac3f1 38fc26c load on device 'cuda:0' took 478.65 ms  (compiled)
+Module _solve_init_dof__locals__kernel_99a497d1 99a497d load on device 'cuda:0' took 161.38 ms  (compiled)
+Module mujoco_warp._src.solver 245b5b3 load on device 'cuda:0' took 2221.44 ms  (compiled)
+Module _solve_init_jaref_kernel__locals__kernel_587e0ad0 587e0ad load on device 'cuda:0' took 188.60 ms  (compiled)
+Module mul_m_kernel__locals___mul_m_fd2186c4 fd2186c load on device 'cuda:0' took 223.07 ms  (compiled)
+Module _update_constraint_efc__locals__kernel_4af8f110 4af8f11 load on device 'cuda:0' took 275.44 ms  (compiled)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_391cb5b4 391cb5b load on device 'cuda:0' took 234.20 ms  (compiled)
+Module _update_gradient_zero_grad_dot__locals__kernel_cb780630 cb78063 load on device 'cuda:0' took 178.00 ms  (compiled)
+Module _update_gradient_grad__locals__kernel_0cbf4927 0cbf492 load on device 'cuda:0' took 184.63 ms  (compiled)
+Module _update_gradient_JTDAJ_dense_tiled__locals__kernel_3c923fc1 65345e8 load on device 'cuda:0' took 1044.81 ms  (compiled)
+Module _update_gradient_cholesky__locals__kernel_b1ee19de 47a089e load on device 'cuda:0' took 4728.15 ms  (compiled)
+Module _linesearch_iterative_kernel__locals__kernel_fb5b8694 726f286 load on device 'cuda:0' took 1028.49 ms  (compiled)
+Module _update_constraint_efc__locals__kernel_e30beb1f e30beb1 load on device 'cuda:0' took 289.90 ms  (compiled)
+Module _update_constraint_init_qfrc_constraint_dense__locals__kernel_5ba72bac 5ba72ba load on device 'cuda:0' took 224.24 ms  (compiled)
+Module _update_gradient_zero_grad_dot__locals__kernel_f708ee5f f708ee5 load on device 'cuda:0' took 208.92 ms  (compiled)
+Module _update_gradient_grad__locals__kernel_cb93df65 cb93df6 load on device 'cuda:0' took 204.03 ms  (compiled)
+Module _update_gradient_cholesky__locals__kernel_9476d6bc 416d3a5 load on device 'cuda:0' took 1927.42 ms  (compiled)
+Module mujoco_warp._src.sensor 42e0a24 load on device 'cuda:0' took 6534.11 ms  (compiled)
+Module mujoco_warp._src.derivative e770e28 load on device 'cuda:0' took 1946.25 ms  (compiled)
+Module _next_time_builder__locals___next_time_95ad6d7a 95ad6d7 load on device 'cuda:0' took 211.03 ms  (compiled)
+Module reset_data__locals__reset_xfrc_applied_03030511 0303051 load on device 'cuda:0' took 182.30 ms  (compiled)
+Module reset_data__locals__reset_M_631075dd 631075d load on device 'cuda:0' took 183.91 ms  (compiled)
+Module reset_data__locals__reset_mocap_6513201c 6513201 load on device 'cuda:0' took 207.03 ms  (compiled)
+Module reset_data__locals__reset_contact_5c08f689 5c08f68 load on device 'cuda:0' took 248.95 ms  (compiled)
+Module reset_data__locals__reset_sleep_50b990da 50b990d load on device 'cuda:0' took 210.24 ms  (compiled)
+Module reset_data__locals__reset_nworld_69a10925 69a1092 load on device 'cuda:0' took 308.60 ms  (compiled)
+
++---------------------------------+
+|         Base Environment        |
++------------------------+--------+
+| Property               | Value  |
++------------------------+--------+
+| Number of environments | 1      |
+| Environment device     | cuda:0 |
+| Environment seed       | None   |
+| Physics step-size      | 0.002  |
+| Environment step-size  | 0.01   |
++------------------------+--------+
+
+[INFO] <EventManager> contains 1 active terms.
++-------------------------------------+
+| Active Event Terms in Mode: 'reset' |
++------------+------------------------+
+|   Index    | Name                   |
++------------+------------------------+
+|     0      | reset_ball             |
++------------+------------------------+
+
+[INFO] <NullCommandManager> (inactive)
+[INFO] <ActionManager> contains 1 active terms.
++--------------------------------+
+| Active Action Terms (shape: 3) |
++--------+---------+-------------+
+| Index  | Name    |   Dimension |
++--------+---------+-------------+
+|   0    | paddle  |           3 |
++--------+---------+-------------+
+
+[INFO] <ObservationManager> contains 2 groups.
++-----------------------------------------------------------+
+| Active Observation Terms in Group: 'actor' (shape: (18,)) |
++--------------+----------------------------+---------------+
+|    Index     | Name                       |     Shape     |
++--------------+----------------------------+---------------+
+|      0       | ball                       |      (9,)     |
+|      1       | paddle_pos                 |      (3,)     |
+|      2       | paddle_vel                 |      (3,)     |
+|      3       | last_action                |      (3,)     |
++--------------+----------------------------+---------------+
++------------------------------------------------------------+
+| Active Observation Terms in Group: 'critic' (shape: (18,)) |
++--------------+-----------------------------+---------------+
+|    Index     | Name                        |     Shape     |
++--------------+-----------------------------+---------------+
+|      0       | ball                        |      (9,)     |
+|      1       | paddle_pos                  |      (3,)     |
+|      2       | paddle_vel                  |      (3,)     |
+|      3       | last_action                 |      (3,)     |
++--------------+-----------------------------+---------------+
+
+[INFO] <TerminationManager> contains 2 active terms.
++------------------------------+
+|   Active Termination Terms   |
++-------+-----------+----------+
+| Index | Name      | Time Out |
++-------+-----------+----------+
+|   0   | time_out  |   True   |
+|   1   | ball_lost |  False   |
++-------+-----------+----------+
+
+[INFO] <RewardManager> contains 4 active terms.
++------------------------------------+
+|        Active Reward Terms         |
++-------+-------------------+--------+
+| Index | Name              | Weight |
++-------+-------------------+--------+
+|   0   | ball_height       |    1.0 |
+|   1   | paddle_under_ball |    1.0 |
+|   2   | ball_drift        |    0.5 |
+|   3   | action_rate       |  -0.01 |
++-------+-------------------+--------+
+
+[INFO] <NullCurriculumManager> (inactive)
+[INFO] <NullMetricsManager> (inactive)
+[INFO] <NullRecorderManager> (inactive)
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ('actor',)
+	 critic :  ('critic',)
+--------------------------------------------------------------------------------
+Actor Model: MLPModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=18, out_features=128, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=3, bias=True)
+  )
+)
+Critic Model: MLPModel(
+  (obs_normalizer): EmpiricalNormalization()
+  (mlp): MLP(
+    (0): Linear(in_features=18, out_features=128, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=128, out_features=128, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+  t= 0.55 s   bounce 1: top at 1.15 m (goal 1.5 m)
+  t= 1.21 s   bounce 2: top at 1.83 m (goal 1.5 m)
+  t= 2.03 s   bounce 3: top at 1.57 m (goal 1.5 m)
+  t= 2.69 s   bounce 4: top at 1.36 m (goal 1.5 m)
+  t= 3.01 s   bounce 5: top at 0.91 m (goal 1.5 m)
+  t= 3.45 s   bounce 6: top at 1.80 m (goal 1.5 m)
+  t= 4.29 s   bounce 7: top at 1.63 m (goal 1.5 m)
+  t= 5.07 s   bounce 8: top at 1.62 m (goal 1.5 m)
+  t= 5.84 s   bounce 9: top at 1.62 m (goal 1.5 m)
+  t= 6.64 s   bounce 10: top at 1.58 m (goal 1.5 m)
+  t= 7.43 s   bounce 11: top at 1.72 m (goal 1.5 m)
+11 bounces; wrote the video (an .mp4 next to this script)
