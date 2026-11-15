@@ -1,0 +1,6 @@
+status on Davids-MacBook-Pro.local, python 3.13.4, target dlitva01@login-prod.pax.tufts.edu, dir ~/mujoco-hpc
+reusing the SSH connection that is already open
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'scancel 7149682'"'"''
+[exit 0]
+cancel requested for job 7149682

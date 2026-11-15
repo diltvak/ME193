@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/cluster/home/dlitva01/mujoco-hpc/runs/1105_cube-20261105-110236/1105_cube.py", line 29, in <module>
+    model = mujoco.MjModel.from_xml_string(XML)   # build the physics model
+ValueError: XML Error: invalid keyword: 'cube'
+Element 'geom', line 12
+

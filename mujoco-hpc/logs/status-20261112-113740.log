@@ -1,0 +1,794 @@
+status on Davids-MacBook-Pro.local, python 3.13.4, target dlitva01@login-prod.pax.tufts.edu, dir ~/mujoco-hpc
+reusing the SSH connection that is already open
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 2:27, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 2:38, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 2:49, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 2:59, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 3:10, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 3:21, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 3:31, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 3:42, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 3:53, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 4:03, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 4:14, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 4:25, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 4:35, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+Warning: EPA horizon = 24 isn't large enough.
+Warning: EPA horizon = 24 isn't large enough.
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 4:46, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+Warning: EPA horizon = 24 isn't large enough.
+Warning: EPA horizon = 24 isn't large enough.
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 4:56, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+Warning: EPA horizon = 24 isn't large enough.
+Warning: EPA horizon = 24 isn't large enough.
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 5:07, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+Warning: EPA horizon = 24 isn't large enough.
+Warning: EPA horizon = 24 isn't large enough.
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 5:18, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+Warning: EPA horizon = 24 isn't large enough.
+Warning: EPA horizon = 24 isn't large enough.
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 5:28, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+/cluster/home/dlitva01/mujoco-env/lib/python3.13/site-packages/mujoco_warp/_src/io.py:713: UserWarning: MULTICCD is enabled, but the scene contains CCD pairs without multicontact support: [('CYLINDER', 'CYLINDER')]. At most 1 contact will be generated for these pairs.
+  warnings.warn(
+Warning: EPA horizon = 24 isn't large enough.
+Warning: EPA horizon = 24 isn't large enough.
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 5:39, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 5:50, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 6:00, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 6:11, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 6:22, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 6:32, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 6:43, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 6:54, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 7:04, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 7:15, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 7:26, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 7:36, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 7:47, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 7:58, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 8:08, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''
+/cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'tail -n 25 /cluster/home/dlitva01/mujoco-hpc/runs/train-20261112-113510/slurm-7149682.out'"'"''
+
+################################################################################
+[1m                          Learning iteration 845/3000                           [0m 
+
+                            Total steps: 83165184 
+                       Steps per second: 331026 
+                        Collection time: 0.235s 
+                          Learning time: 0.062s 
+                        Mean value loss: 11.9517
+                    Mean surrogate loss: -0.0026
+                      Mean entropy loss: 7.0596
+                            Mean reward: 179.95
+                    Mean episode length: 513.56
+                        Mean action std: 0.66
+          Episode_Termination/ball_lost: 5.8333
+             Episode_Reward/action_rate: -0.1449
+                Episode_Reward/be_there: 0.1096
+               Episode_Reward/pass_made: 17.4156
+           Episode_Termination/time_out: 1.1667
+             Episode_Reward/ball_height: 0.0401
+                     Episode_Reward/aim: 0.1324
+--------------------------------------------------------------------------------
+                         Iteration time: 0.30s
+                           Time elapsed: 0:04:08
+                                    ETA: 0:10:33
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7149682 -o '"'"'"'"'"'"'"'"'%T (%r), running %M, on %N'"'"'"'"'"'"'"'"' 2>/dev/null'"'"''
+RUNNING (None), running 8:19, on pax186
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'ls -t ~/mujoco-hpc/*-7149682.out ~/mujoco-hpc/runs/*/slurm-7149682.out 2>/dev/null | head -1'"'"''

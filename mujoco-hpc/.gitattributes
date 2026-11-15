@@ -1,0 +1,5 @@
+# Keep LF endings on every OS (Windows git would otherwise check these out as CRLF, which breaks them on the Linux cluster)
+* text=auto eol=lf
+*.sh text eol=lf
+*.sbatch text eol=lf
+*.py text eol=lf

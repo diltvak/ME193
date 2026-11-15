@@ -11,8 +11,8 @@ network. The Pico 2 W still samples at 100 Hz and broadcasts UDP over Wi-Fi exac
 pip3 install -r step_nn/requirements.txt
 python3 -m step_nn.evaluate                                  # uncertainty analysis (~14 min) -> results/
 python3 -m step_nn.train                                     # final model -> models/
-python3 -m step_nn.live --ip 10.247.137.46 --plot            # live from the Pico on Tufts_Robot
-python3 -m step_nn.live --ip 10.0.0.251 --plot            # live from the Pico on Tufts_Robot
+python3 -m step_nn.live --ip 10.247.137.70 --plot            # live from the Pico on Tufts_Robot
+python3 -m step_nn.live --ip 10.0.0.251 --plot            # live from the Pico on Tufts_Insecure
 python3 -m step_nn.live --source replay --file 33_steps --plot --speed 3   # no hardware
 ```
 

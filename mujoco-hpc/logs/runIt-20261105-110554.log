@@ -1,0 +1,44 @@
+runIt on Davids-MacBook-Pro.local, python 3.13.4, target dlitva01@login-prod.pax.tufts.edu, dir ~/mujoco-hpc
+reusing the SSH connection that is already open
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'test -x ~/mujoco-env/bin/python'"'"''
+[exit 0]
+copying to ~/mujoco-hpc/runs/1105_cube-20261105-110554
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'mkdir -p ~/mujoco-hpc/runs/1105_cube-20261105-110554'"'"''
+[exit 0]
+
+$ rsync -az -e 'ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h' /var/folders/hv/224p2gwd4cn4bftxh75p2zpc0000gn/T/tmpbfepazoi/1105_cube.py /var/folders/hv/224p2gwd4cn4bftxh75p2zpc0000gn/T/tmpbfepazoi/job.sbatch 'dlitva01@login-prod.pax.tufts.edu:~/mujoco-hpc/runs/1105_cube-20261105-110554/'
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'cd ~/mujoco-hpc/runs/1105_cube-20261105-110554 && sbatch --parsable  job.sbatch'"'"''
+6886618
+[exit 0]
+submitted job 6886618
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 6886618 -o "%T|%R"'"'"''
+PENDING|(None)
+[exit 0]
+  job 6886618: PENDING ((None))
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 6886618 -o "%T|%R"'"'"''
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'sacct -j 6886618 -X -n -P -o State,ExitCode,Elapsed,NodeList'"'"''
+COMPLETED|0:0|00:00:02|pax020
+[exit 0]
+  job 6886618 finished: COMPLETED (exit 0:0, 00:00:02, node pax020)
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'cat ~/mujoco-hpc/runs/1105_cube-20261105-110554/slurm-6886618.out'"'"''
+wrote bouncing_cube.mp4: 121 frames, 4 s of simulation
+[exit 0]
+--- ~/mujoco-hpc/runs/1105_cube-20261105-110554/slurm-6886618.out ---
+wrote bouncing_cube.mp4: 121 frames, 4 s of simulation
+
+--- end ---
+
+$ rsync -az -e 'ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h' 'dlitva01@login-prod.pax.tufts.edu:~/mujoco-hpc/runs/1105_cube-20261105-110554/' /Users/davidlitvak/Desktop/ME193/mujoco-hpc/runs/1105_cube-20261105-110554/
+[exit 0]
+copied back to /Users/davidlitvak/Desktop/ME193/mujoco-hpc/runs/1105_cube-20261105-110554:
+  bouncing_cube.mp4  (23 kB)
+  slurm-6886618.out  (0 kB)
