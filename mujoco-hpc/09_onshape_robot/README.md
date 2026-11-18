@@ -10,6 +10,7 @@ and drive it in a simulation on the cluster. The cluster setup in `../README.md`
 |---|---|
 | `README.md` | This guide: design the robot in Onshape, export it, drive it. |
 | `drive.py` | Drives the robot with a fixed plan (forward, spin, curve) and films it. |
+| `walk_rl.py` | Teaches the robot in `onshape/` to walk straight with reinforcement learning (mjlab) and films it. One file, run like `drive.py`; the command is at the top of the file. |
 | `.env.example` | Template for your Onshape keys. Copy it to `.env` and fill it in (`.env` stays out of git). |
 | `onshape/` | The robot: `config.json` (which Onshape document), and the exported `robot.xml`, `scene.xml`, `assets/`. A hand-written sample robot is there until you export your own. |
 | `sample/` | A copy of that sample robot, to fall back on. |

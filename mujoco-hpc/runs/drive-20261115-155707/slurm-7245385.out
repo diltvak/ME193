@@ -1,0 +1,7 @@
+joints:    ['body_freejoint', 'right_wheel', 'left_wheel']
+actuators: ['right_wheel', 'left_wheel']
+t= 1.0s  robot at x=+0.00 m, y=-0.00 m
+t= 4.0s  robot at x=+0.00 m, y=+0.00 m
+t= 7.0s  robot at x=+0.10 m, y=-0.13 m
+t=10.0s  robot at x=+0.10 m, y=-0.13 m
+wrote drive.mp4: 301 frames

@@ -1,0 +1,14 @@
+runIt on Davids-MacBook-Pro.local, python 3.13.4, target dlitva01@login-prod.pax.tufts.edu, dir ~/mujoco-hpc
+reusing the SSH connection that is already open
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'test -x ~/mujoco-env/bin/python'"'"''
+[exit 0]
+copying to ~/mujoco-hpc/runs/walk_quarter_rl-20261115-180010
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'mkdir -p ~/mujoco-hpc/runs/walk_quarter_rl-20261115-180010'"'"''
+[exit 0]
+
+$ rsync -az -e 'ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h' /var/folders/hv/224p2gwd4cn4bftxh75p2zpc0000gn/T/tmpl8ilg62_/walk_quarter_rl.py /var/folders/hv/224p2gwd4cn4bftxh75p2zpc0000gn/T/tmpl8ilg62_/job.sbatch 09_onshape_robot/onshape runs/walk_quarter_rl-20261115-170000/walk_quarter_policy.pt 'dlitva01@login-prod.pax.tufts.edu:~/mujoco-hpc/runs/walk_quarter_rl-20261115-180010/'
+rsync(20349): error: runs/walk_quarter_rl-20261115-170000/walk_quarter_policy.pt: (l)stat: No such file or directory
+[exit 23]
+FAILED: command failed (exit 23): rsync -az -e ...
