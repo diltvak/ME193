@@ -1,27 +1,59 @@
-<!-- A hand-written stand-in for what onshape-to-robot produces: a box with two driven wheels and a skid.
-     Axle is toward the rear; the skid is at the front. Units: metres. -->
-<mujoco model="robot">
-  <compiler angle="radian"/>
-
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- Onshape https://cad.onshape.com/documents/239012a132bcb690f12354a4/w/f510a4959c7f2992c2aee621/e/19296301cfa7a29750373f6a -->
+<mujoco model="onshape">
+  <compiler angle="radian" meshdir="assets" autolimits="true"/>
+  <default>
+    <default class="onshape">
+      <joint frictionloss="0.1" armature="0.005"/>
+      <position kp="50" dampratio="1"/>
+      <default class="visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+      </default>
+      <default class="collision">
+        <geom group="3"/>
+      </default>
+    </default>
+  </default>
   <worldbody>
-    <body name="chassis" pos="0 0 0.05">
-      <geom type="box" size=".1 .06 .025" rgba=".7 .7 .75 1"/>
-
-      <geom name="skid" type="sphere" size=".015" pos=".08 0 -.035" rgba=".3 .3 .3 1"/>
-
-      <body name="left_wheel_link" pos="-.04 .07 -.01">
-        <joint name="left_wheel" type="hinge" axis="0 1 0"/>
-        <geom type="cylinder" size=".04 .01" euler="1.5708 0 0" rgba=".9 .4 .1 1"/>
+    <!-- Link body -->
+    <body name="body" pos="0 0 0" quat="1 0 0 0" childclass="onshape">
+      <freejoint name="body_freejoint"/>
+      <inertial pos="-0.00126227 0 0.0149779" mass="0.109673" fullinertia="2.64988e-05 6.42985e-05 7.49754e-05 0 -6.4061e-08 0"/>
+      <!-- Part body -->
+      <geom type="mesh" class="visual" pos="-0.00369231 0 0" quat="1 0 0 0" mesh="body" material="body_material"/>
+      <geom type="mesh" class="collision" pos="-0.00369231 0 0" quat="1 0 0 0" mesh="body" material="body_material"/>
+      <!-- Link right_arm -->
+      <body name="right_arm" pos="0.0203077 0.019 0.015" quat="0.707107 0.707107 -0 -0">
+        <!-- Joint from body to right_arm -->
+        <joint axis="0 0 1" name="right_wheel"/>
+        <inertial pos="-0.00986763 0 -0.0134372" mass="0.00950977" fullinertia="3.73892e-07 2.87664e-06 2.87532e-06 0 -2.78023e-07 0"/>
+        <!-- Part right_arm -->
+        <geom type="mesh" class="visual" pos="-0.024 -0.015 0.019" quat="0.707107 -0.707107 0 0" mesh="right_arm" material="right_arm_material"/>
+        <geom type="mesh" class="collision" pos="-0.024 -0.015 0.019" quat="0.707107 -0.707107 0 0" mesh="right_arm" material="right_arm_material"/>
       </body>
-      <body name="right_wheel_link" pos="-.04 -.07 -.01">
-        <joint name="right_wheel" type="hinge" axis="0 1 0"/>
-        <geom type="cylinder" size=".04 .01" euler="1.5708 0 0" rgba=".9 .4 .1 1"/>
+      <!-- Link left_arm -->
+      <body name="left_arm" pos="0.0203077 -0.019 0.015" quat="0.707107 -0.707107 0 0">
+        <!-- Joint from body to left_arm -->
+        <joint axis="0 0 1" name="left_wheel"/>
+        <inertial pos="-0.00986763 0 -0.0134372" mass="0.00950977" fullinertia="3.73892e-07 2.87664e-06 2.87532e-06 0 -2.78023e-07 0"/>
+        <!-- Part left_arm -->
+        <geom type="mesh" class="visual" pos="-0.024 0.015 0.019" quat="0.707107 0.707107 -0 -0" mesh="left_arm" material="left_arm_material"/>
+        <geom type="mesh" class="collision" pos="-0.024 0.015 0.019" quat="0.707107 0.707107 -0 -0" mesh="left_arm" material="left_arm_material"/>
       </body>
     </body>
   </worldbody>
-
+  <asset>
+    <mesh file="body.stl"/>
+    <mesh file="right_arm.stl"/>
+    <mesh file="left_arm.stl"/>
+    <material name="body_material" rgba="0.615686 0.811765 0.929412 1"/>
+    <material name="right_arm_material" rgba="0.647059 0.647059 0.647059 1"/>
+    <material name="left_arm_material" rgba="0.647059 0.647059 0.647059 1"/>
+  </asset>
   <actuator>
-    <position name="left_wheel" joint="left_wheel" kp="2" kv=".2" forcerange="-.2 .2"/>
-    <position name="right_wheel" joint="right_wheel" kp="2" kv=".2" forcerange="-.2 .2"/>
+    <position class="onshape" name="right_wheel" joint="right_wheel"/>
+    <position class="onshape" name="left_wheel" joint="left_wheel"/>
   </actuator>
+  <equality/>
 </mujoco>

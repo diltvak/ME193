@@ -1,0 +1,57 @@
+runIt on Davids-MacBook-Pro.local, python 3.13.4, target dlitva01@login-prod.pax.tufts.edu, dir ~/mujoco-hpc
+reusing the SSH connection that is already open
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'test -x ~/mujoco-env/bin/python'"'"''
+[exit 0]
+copying to ~/mujoco-hpc/runs/drive-20261115-155707
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'mkdir -p ~/mujoco-hpc/runs/drive-20261115-155707'"'"''
+[exit 0]
+
+$ rsync -az -e 'ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h' /var/folders/hv/224p2gwd4cn4bftxh75p2zpc0000gn/T/tmp8kbgpwez/drive.py /var/folders/hv/224p2gwd4cn4bftxh75p2zpc0000gn/T/tmp8kbgpwez/job.sbatch 09_onshape_robot/onshape 'dlitva01@login-prod.pax.tufts.edu:~/mujoco-hpc/runs/drive-20261115-155707/'
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'cd ~/mujoco-hpc/runs/drive-20261115-155707 && sbatch --parsable  job.sbatch'"'"''
+7245385
+[exit 0]
+submitted job 7245385
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7245385 -o "%T|%R"'"'"''
+PENDING|(None)
+[exit 0]
+  job 7245385: PENDING ((None))
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'squeue -h -j 7245385 -o "%T|%R"'"'"''
+[exit 0]
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'sacct -j 7245385 -X -n -P -o State,ExitCode,Elapsed,NodeList'"'"''
+COMPLETED|0:0|00:00:05|pax026
+[exit 0]
+  job 7245385 finished: COMPLETED (exit 0:0, 00:00:05, node pax026)
+
+$ ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h dlitva01@login-prod.pax.tufts.edu 'bash -lc '"'"'cat ~/mujoco-hpc/runs/drive-20261115-155707/slurm-7245385.out'"'"''
+joints:    ['body_freejoint', 'right_wheel', 'left_wheel']
+actuators: ['right_wheel', 'left_wheel']
+t= 1.0s  robot at x=+0.00 m, y=-0.00 m
+t= 4.0s  robot at x=+0.00 m, y=+0.00 m
+t= 7.0s  robot at x=+0.10 m, y=-0.13 m
+t=10.0s  robot at x=+0.10 m, y=-0.13 m
+wrote drive.mp4: 301 frames
+[exit 0]
+--- ~/mujoco-hpc/runs/drive-20261115-155707/slurm-7245385.out ---
+joints:    ['body_freejoint', 'right_wheel', 'left_wheel']
+actuators: ['right_wheel', 'left_wheel']
+t= 1.0s  robot at x=+0.00 m, y=-0.00 m
+t= 4.0s  robot at x=+0.00 m, y=+0.00 m
+t= 7.0s  robot at x=+0.10 m, y=-0.13 m
+t=10.0s  robot at x=+0.10 m, y=-0.13 m
+wrote drive.mp4: 301 frames
+
+--- end ---
+
+$ rsync -az -e 'ssh -o ControlMaster=no -o BatchMode=yes -o ControlPath=/Users/davidlitvak/.ssh/sockets/%r@%h' 'dlitva01@login-prod.pax.tufts.edu:~/mujoco-hpc/runs/drive-20261115-155707/' /Users/davidlitvak/Desktop/ME193/mujoco-hpc/runs/drive-20261115-155707/
+[exit 0]
+copied back to /Users/davidlitvak/Desktop/ME193/mujoco-hpc/runs/drive-20261115-155707:
+  drive.mp4  (178 kB)
+  onshape  (0 kB)
+  slurm-7245385.out  (0 kB)
