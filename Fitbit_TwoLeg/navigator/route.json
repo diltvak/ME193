@@ -1,0 +1,71 @@
+{
+  "trainer_height_m": 1.75,
+  "trainer_step_m": 0.726,
+  "walks": [
+    "training1_20261120_122152",
+    "training2_20261120_122517",
+    "training3_20261120_123004",
+    "training4_20261120_123511",
+    "training5_20261120_123722",
+    "training6_20261120_123916",
+    "training7_20261120_124130"
+  ],
+  "nodes": [
+    {
+      "name": "start",
+      "dist_steps": 0.0,
+      "dist_steps_sd": 0.0,
+      "dist_m": 0.0,
+      "press_m": 0.0,
+      "turn_deg": 0.0,
+      "turn_seen": "0/7"
+    },
+    {
+      "name": "wp1",
+      "dist_steps": 6.0,
+      "dist_steps_sd": 0.9,
+      "dist_m": 5.08,
+      "press_m": 4.36,
+      "turn_deg": -87.0,
+      "turn_seen": "7/7"
+    },
+    {
+      "name": "wp2",
+      "dist_steps": 39.8,
+      "dist_steps_sd": 3.8,
+      "dist_m": 30.3,
+      "press_m": 28.92,
+      "turn_deg": 91.0,
+      "turn_seen": "2/2",
+      "note": "go down the stairs"
+    },
+    {
+      "name": "wp3",
+      "dist_steps": 61.8,
+      "dist_steps_sd": 11.7,
+      "dist_m": 44.88,
+      "press_m": 44.88,
+      "turn_deg": 89.0,
+      "turn_seen": "7/7"
+    },
+    {
+      "name": "wp4",
+      "dist_steps": 65.8,
+      "dist_steps_sd": 11.6,
+      "dist_m": 47.79,
+      "press_m": 47.79,
+      "turn_deg": 89.0,
+      "turn_seen": "7/7"
+    },
+    {
+      "name": "end",
+      "dist_steps": 81.8,
+      "dist_steps_sd": 12.0,
+      "dist_m": 59.41,
+      "press_m": 59.41,
+      "turn_deg": 0.0,
+      "turn_seen": "0/0"
+    }
+  ],
+  "note": "dist_m is the distance from the start. Replace it with tape-measured values if you have them."
+}
